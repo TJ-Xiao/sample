@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\ResetPassword;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -55,6 +56,11 @@ class User extends Authenticatable
         return Status::whereIn('user_id', $user_ids)
             ->with('user')
             ->orderBy('created_at', 'desc');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPassword($token));
     }
 
     public function followers()
